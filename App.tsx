@@ -25,8 +25,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-cron.schedule("*/3 * * * *", () => {
-  console.log("running a task every minute");
+cron.schedule("*/5 * * * *", () => {
+  console.log("running a task every five minutes");
   (async () => {
     await run();
   })();
