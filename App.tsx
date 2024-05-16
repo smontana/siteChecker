@@ -44,20 +44,6 @@ async function run() {
 
   if (data.desc === textToCheck) {
     console.log("not available yet");
-    const mailOptions = {
-      from: fromEmail,
-      to: toEmails,
-      subject: subject,
-      text: body,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email: ", error);
-      } else {
-        console.log("Email sent: ", info.response);
-      }
-    });
   } else {
     const mailOptions = {
       from: fromEmail,
