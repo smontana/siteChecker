@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cron = require("node-cron");
 const scrapeIt = require("scrape-it");
 const nodemailer = require("nodemailer");
 
@@ -24,7 +25,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-(async () => {
+cron.schedule("*/3 * * * *", () => {
+  console.log("running a task every minute");
+  (async () => {
+    await run();
+  })();
+});
+
+async function run() {
   const { data } = await scrapeIt(site, {
     title: {
       selector: titleSelector,
@@ -36,6 +44,20 @@ const transporter = nodemailer.createTransport({
 
   if (data.desc === textToCheck) {
     console.log("not available yet");
+    const mailOptions = {
+      from: fromEmail,
+      to: toEmails,
+      subject: subject,
+      text: body,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email: ", error);
+      } else {
+        console.log("Email sent: ", info.response);
+      }
+    });
   } else {
     const mailOptions = {
       from: fromEmail,
@@ -52,4 +74,4 @@ const transporter = nodemailer.createTransport({
       }
     });
   }
-})();
+}
